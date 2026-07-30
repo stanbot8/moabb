@@ -83,15 +83,20 @@ class WithinSessionEvaluation(BaseEvaluation):
 
     def _create_splitter(self):
         """Create the WithinSessionSplitter for parallel evaluation."""
-        cv_class, cv_kwargs = self._resolve_cv(StratifiedKFold)
-        if self.groups is not None:
-            cv_kwargs = {**cv_kwargs, "groups": self.groups}
+        cv_class, inner_cv_kwargs = self._resolve_cv(StratifiedKFold)
+        wrapper_shuffle = inner_cv_kwargs.pop("shuffle", True)
+        splitter_groups = (
+            self.groups
+            if self.groups is not None
+            else inner_cv_kwargs.pop("groups", None)
+        )
         return WithinSessionSplitter(
             n_folds=self.n_splits or 5,
-            shuffle=True,
-            random_state=self.random_state,
+            shuffle=wrapper_shuffle,
+            random_state=self.random_state if wrapper_shuffle else None,
             cv_class=cv_class,
-            **cv_kwargs,
+            groups=splitter_groups,
+            _inner_cv_kwargs=inner_cv_kwargs,
         )
 
     # flake8: noqa: C901
@@ -299,11 +304,10 @@ class CrossSessionEvaluation(BaseEvaluation):
     def _create_splitter(self):
         """Create the CrossSessionSplitter for parallel evaluation."""
         cv_class, cv_kwargs = self._resolve_cv(LeaveOneGroupOut)
+        splitter_kwargs = {"random_state": self.random_state, **cv_kwargs}
         if self.groups is not None:
-            cv_kwargs = {**cv_kwargs, "groups": self.groups}
-        return CrossSessionSplitter(
-            cv_class=cv_class, random_state=self.random_state, **cv_kwargs
-        )
+            splitter_kwargs["groups"] = self.groups
+        return CrossSessionSplitter(cv_class=cv_class, **splitter_kwargs)
 
     # flake8: noqa: C901
     def evaluate(
@@ -542,13 +546,11 @@ class CrossSubjectEvaluation(BaseEvaluation):
             default_class = GroupKFold
             default_kwargs = {"n_splits": self.n_splits}
 
-        default_kwargs.update(self.cv_kwargs)
         cv_class, cv_kwargs = self._resolve_cv(default_class, default_kwargs)
+        splitter_kwargs = {"random_state": self.random_state, **cv_kwargs}
         if self.groups is not None:
-            cv_kwargs = {**cv_kwargs, "groups": self.groups}
-        return CrossSubjectSplitter(
-            cv_class=cv_class, random_state=self.random_state, **cv_kwargs
-        )
+            splitter_kwargs["groups"] = self.groups
+        return CrossSubjectSplitter(cv_class=cv_class, **splitter_kwargs)
 
     def evaluate(
         self,
@@ -642,15 +644,20 @@ class WithinSubjectEvaluation(BaseEvaluation):
 
     def _create_splitter(self):
         """Create the WithinSubjectSplitter for parallel evaluation."""
-        cv_class, cv_kwargs = self._resolve_cv(StratifiedKFold)
-        if self.groups is not None:
-            cv_kwargs = {**cv_kwargs, "groups": self.groups}
+        cv_class, inner_cv_kwargs = self._resolve_cv(StratifiedKFold)
+        wrapper_shuffle = inner_cv_kwargs.pop("shuffle", True)
+        splitter_groups = (
+            self.groups
+            if self.groups is not None
+            else inner_cv_kwargs.pop("groups", None)
+        )
         return WithinSubjectSplitter(
             n_folds=self.n_splits or 5,
-            shuffle=True,
-            random_state=self.random_state,
+            shuffle=wrapper_shuffle,
+            random_state=self.random_state if wrapper_shuffle else None,
             cv_class=cv_class,
-            **cv_kwargs,
+            groups=splitter_groups,
+            _inner_cv_kwargs=inner_cv_kwargs,
         )
 
     def evaluate(

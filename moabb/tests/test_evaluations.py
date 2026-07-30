@@ -12,6 +12,7 @@ from pyriemann.estimation import Covariances
 from pyriemann.spatialfilters import CSP
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
 from sklearn.dummy import DummyClassifier as Dummy
+from sklearn.model_selection import GroupShuffleSplit
 from sklearn.pipeline import FunctionTransformer, Pipeline, make_pipeline
 
 from moabb.analysis.results import get_digest, get_string_rep
@@ -485,6 +486,92 @@ def test_resolve_cv_honours_cv_kwargs_without_forcing_defaults():
         for e in evals:
             if os.path.isfile(e.results.filepath):
                 os.remove(e.results.filepath)
+
+
+def test_default_cv_kwargs_override_splitter_defaults(tmp_path):
+    evaluation = ev.WithinSessionEvaluation(
+        paradigm=FakeImageryParadigm(),
+        datasets=[dataset],
+        hdf5_path=tmp_path,
+        random_state=42,
+        cv_kwargs={"n_splits": 3, "shuffle": False},
+    )
+    splitter = evaluation._create_splitter()
+    assert splitter._cv_kwargs["n_splits"] == 3
+    assert splitter._cv_kwargs["random_state"] is None
+    assert splitter.shuffle is False
+    assert splitter.random_state is None
+
+
+@pytest.mark.parametrize(
+    "evaluation_class",
+    [ev.WithinSessionEvaluation, ev.WithinSubjectEvaluation],
+)
+def test_disabled_wrapper_shuffle_preserves_inner_random_state(
+    tmp_path, evaluation_class
+):
+    evaluation = evaluation_class(
+        paradigm=FakeImageryParadigm(),
+        datasets=[dataset],
+        hdf5_path=tmp_path,
+        random_state=42,
+        cv_class=LearningCurveSplitter,
+        cv_kwargs={
+            "data_size": {"policy": "ratio", "value": [0.5, 1.0]},
+            "n_perms": 1,
+            "shuffle": False,
+            "random_state": 17,
+        },
+    )
+    splitter = evaluation._create_splitter()
+    assert splitter.shuffle is False
+    assert splitter.random_state is None
+    assert splitter._cv_kwargs["random_state"] == 17
+
+
+def test_variadic_custom_cv_receives_compatible_defaults(tmp_path):
+    class KeywordGroupShuffleSplit(GroupShuffleSplit):
+        def __init__(self, **kwargs):
+            super().__init__(**kwargs)
+
+    evaluation = ev.CrossSubjectEvaluation(
+        paradigm=FakeImageryParadigm(),
+        datasets=[dataset],
+        hdf5_path=tmp_path,
+        n_splits=3,
+        cv_class=KeywordGroupShuffleSplit,
+    )
+    splitter = evaluation._create_splitter()
+    assert splitter._cv_kwargs["n_splits"] == 3
+
+
+def test_custom_cv_receives_compatible_defaults_and_overrides(tmp_path):
+    evaluation = ev.CrossSubjectEvaluation(
+        paradigm=FakeImageryParadigm(),
+        datasets=[dataset],
+        hdf5_path=tmp_path,
+        n_splits=3,
+        cv_class=GroupShuffleSplit,
+        cv_kwargs={"random_state": 17},
+    )
+    splitter = evaluation._create_splitter()
+    assert splitter._cv_kwargs["n_splits"] == 3
+    assert splitter.random_state == 17
+
+
+def test_cv_kwargs_apply_through_public_process(tmp_path):
+    evaluation = ev.WithinSessionEvaluation(
+        paradigm=FakeImageryParadigm(),
+        datasets=[dataset],
+        hdf5_path=tmp_path,
+        overwrite=True,
+        random_state=42,
+        cv_kwargs={"n_splits": 3, "shuffle": False},
+    )
+
+    results = evaluation.process(pipelines)
+
+    assert not results.empty
 
 
 class Test_CrossSubj(TestWithinSess):
