@@ -110,6 +110,7 @@ class WithinSessionSplitter(BaseCrossValidator):
         random_state: int = None,
         cv_class: type[BaseCrossValidator] = StratifiedKFold,
         groups=None,
+        _inner_cv_kwargs=None,
         **cv_kwargs,
     ):
         self.cv_class = cv_class
@@ -118,6 +119,8 @@ class WithinSessionSplitter(BaseCrossValidator):
         # ``groups`` is only forwarded to a group-aware inner cv; ``None`` keeps
         # the legacy (StratifiedKFold on labels) behaviour.
         self.groups = groups
+        if _inner_cv_kwargs is not None:
+            cv_kwargs = {**cv_kwargs, **_inner_cv_kwargs}
         self.cv_kwargs = cv_kwargs
         self._cv_kwargs = dict(**cv_kwargs)
 
@@ -278,6 +281,7 @@ class WithinSubjectSplitter(BaseCrossValidator):
         random_state: int = None,
         cv_class: type[BaseCrossValidator] = StratifiedKFold,
         groups=None,
+        _inner_cv_kwargs=None,
         **cv_kwargs,
     ):
         self.cv_class = cv_class
@@ -286,6 +290,8 @@ class WithinSubjectSplitter(BaseCrossValidator):
         # ``groups`` is only forwarded to a group-aware inner cv; ``None`` keeps
         # the legacy (StratifiedKFold on labels) behaviour.
         self.groups = groups
+        if _inner_cv_kwargs is not None:
+            cv_kwargs = {**cv_kwargs, **_inner_cv_kwargs}
         self.cv_kwargs = cv_kwargs
         self._cv_kwargs = dict(**cv_kwargs)
 
@@ -517,8 +523,8 @@ class CrossSessionSplitter(BaseCrossValidator):
         """
         subjects = metadata["subject"].unique()
         n_splits = 0
-        for subject in subjects:  # noqa: B007 — referenced via @subject in pandas query below
-            subject_metadata = metadata.query("subject == @subject")
+        for subject in subjects:
+            subject_metadata = metadata.loc[metadata["subject"] == subject]
             sessions = subject_metadata["session"].unique()
 
             if len(sessions) <= 1:
