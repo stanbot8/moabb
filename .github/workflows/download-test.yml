@@ -16,10 +16,8 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os:
-        - ubuntu-latest
-        python-version:
-        - '3.11'
+        os: [ubuntu-latest]
+        python-version: ['3.11']
     defaults:
       run:
         shell: bash
@@ -72,7 +70,7 @@ jobs:
         AB_RUN_ID: ${{ github.run_id }}
         AB_HEAD_SHA: 9c6b1ccfa94c227f15f3b518ee8c5c0475a6e12c
         AB_WORKFLOW_DIGEST: 
-          d926d2048a46e918bc263f240345707f7b3703f095cd3a26adce59e9ab8fd23b
+          eae3afd9baee81bba8e01401602074903c1cb342286d94fa63d39be8a6356a91
         AB_EVENT: ${{ github.event_name }}
         AB_SCHEDULE: ${{ github.event.schedule || '' }}
         AB_VARIABLES: ${{ toJSON(vars) }}
