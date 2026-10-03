@@ -15,14 +15,19 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os: [ubuntu-latest]
-        python-version: ['3.11']
+        os:
+        - ubuntu-latest
+        python-version:
+        - '3.11'
     defaults:
       run:
         shell: bash
     steps:
     - uses: actions/checkout@v4
 
+      with:
+        ref: ${{ github.event_name == 'schedule' && 
+          '9c6b1ccfa94c227f15f3b518ee8c5c0475a6e12c' || github.sha }}
     - name: Install uv
       uses: astral-sh/setup-uv@v5
       with:
@@ -40,6 +45,13 @@ jobs:
       run: |
         echo "Running tests"
         pytest -vv -s --tb=long --durations=0 --maxfail=5 --log-cli-level=INFO --dl-data moabb/tests/test_download.py
+    env:
+      ALPHA_BRIDGE_SOURCE_SHA: ${{ github.event_name == 'schedule' && 
+        '9c6b1ccfa94c227f15f3b518ee8c5c0475a6e12c' || github.sha }}
+      ALPHA_BRIDGE_SOURCE_REF: ${{ github.event_name == 'schedule' && 
+        'refs/heads/develop' || github.ref }}
+      ALPHA_BRIDGE_SOURCE_REF_NAME: ${{ github.event_name == 'schedule' && 
+        'develop' || github.ref_name }}
     needs:
     - alpha_bridge_inputs
     if: ${{ (success()) && needs.alpha_bridge_inputs.outputs.changed == 'true' 
@@ -65,7 +77,7 @@ jobs:
         AB_RUN_ID: ${{ github.run_id }}
         AB_HEAD_SHA: 9c6b1ccfa94c227f15f3b518ee8c5c0475a6e12c
         AB_WORKFLOW_DIGEST: 
-          f6e0824c19f5be1f81187790a5d52552b1a4ed7f31c202530e4758cbb30e1753
+          6623b2ca9a2cee37b92d4ae36e4cee84d9b60191e3d0409c6bd73709c0168d9c
         AB_EVENT: ${{ github.event_name }}
         AB_SCHEDULE: ${{ github.event.schedule || '' }}
         AB_VARIABLES: ${{ toJSON(vars) }}

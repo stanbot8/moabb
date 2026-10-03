@@ -2,13 +2,16 @@ name: Link Check
 
 on:
   push:
-    branches: [develop, master]
+    branches:
+    - develop
+    - master
     paths:
     - '**.md'
     - docs/**
     - .github/workflows/link-check.yml
   pull_request:
-    branches: [develop]
+    branches:
+    - develop
     paths:
     - '**.md'
     - docs/**
@@ -24,34 +27,21 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+      with:
+        ref: ${{ github.event_name == 'schedule' && 
+          '9c6b1ccfa94c227f15f3b518ee8c5c0475a6e12c' || github.sha }}
     - name: Check links in Markdown and RST files
       uses: lycheeverse/lychee-action@v2
       with:
         args: >-
-          --verbose
-          --no-progress
-          --accept 200,204,206,301,302,303,307,308,429
-          --timeout 30
-          --max-retries 3
-          --exclude "^mailto:"
-          --exclude "^https://github\\.com/NeuroTechX/moabb/(issues|pulls|compare)"
-          --exclude "^https://github\\.com/.*/(fork|new)"
-          --exclude "localhost"
-          --exclude "127\\.0\\.0\\.1"
-          --exclude "example\\.com"
-          --exclude "^file://"
-          --exclude "^git\\+"
-          --exclude "arxiv\\.org"
-          --exclude "twitter\\.com"
-          --exclude "x\\.com"
-          --exclude "linkedin\\.com"
-          --exclude "app\\.gitter\\.im"
-          --exclude "gitter\\.im"
-          --exclude "gitlab\\.com"
-          --exclude "dx\\.doi\\.org"
-          --exclude "doi\\.org/10\\.5281/zenodo"
-          "./**/*.md"
-          "./**/*.rst"
+          --verbose --no-progress --accept 200,204,206,301,302,303,307,308,429 --timeout
+          30 --max-retries 3 --exclude "^mailto:" --exclude "^https://github\\.com/NeuroTechX/moabb/(issues|pulls|compare)"
+          --exclude "^https://github\\.com/.*/(fork|new)" --exclude "localhost" --exclude
+          "127\\.0\\.0\\.1" --exclude "example\\.com" --exclude "^file://" --exclude
+          "^git\\+" --exclude "arxiv\\.org" --exclude "twitter\\.com" --exclude "x\\.com"
+          --exclude "linkedin\\.com" --exclude "app\\.gitter\\.im" --exclude "gitter\\.im"
+          --exclude "gitlab\\.com" --exclude "dx\\.doi\\.org" --exclude "doi\\.org/10\\.5281/zenodo"
+          "./**/*.md" "./**/*.rst"
         fail: true
         output: ./lychee-report.md
 
@@ -90,6 +80,13 @@ jobs:
               labels: ['broken-links', 'documentation']
             });
           }
+    env:
+      ALPHA_BRIDGE_SOURCE_SHA: ${{ github.event_name == 'schedule' && 
+        '9c6b1ccfa94c227f15f3b518ee8c5c0475a6e12c' || github.sha }}
+      ALPHA_BRIDGE_SOURCE_REF: ${{ github.event_name == 'schedule' && 
+        'refs/heads/develop' || github.ref }}
+      ALPHA_BRIDGE_SOURCE_REF_NAME: ${{ github.event_name == 'schedule' && 
+        'develop' || github.ref_name }}
     needs:
     - alpha_bridge_inputs
     if: ${{ (success()) && needs.alpha_bridge_inputs.outputs.changed == 'true' 
@@ -115,7 +112,7 @@ jobs:
         AB_RUN_ID: ${{ github.run_id }}
         AB_HEAD_SHA: 9c6b1ccfa94c227f15f3b518ee8c5c0475a6e12c
         AB_WORKFLOW_DIGEST: 
-          c37b4e9a856410067fe2d54da609c0042c7941bacfd1821c76d0b58a1944f60e
+          97794f064b1b66fcf9108bb7af6c7b0f7482c724d8b2f463f1914610bb906a26
         AB_EVENT: ${{ github.event_name }}
         AB_SCHEDULE: ${{ github.event.schedule || '' }}
         AB_VARIABLES: ${{ toJSON(vars) }}
