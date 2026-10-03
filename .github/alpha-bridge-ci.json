@@ -1,0 +1,23 @@
+{
+  "definition_blob_sha1": {
+    ".github/workflows/alpha-bridge-ci-verify.yml": "0588ba302e7a97a9721ae7494f6b9aca053476b6",
+    ".github/workflows/download-test.yml": "4b2292995484eac3f84a0c36da170b17d8166134",
+    ".github/workflows/link-check.yml": "fa3eccb5526f2a9d977fe0bc9e1cb8225355e66f"
+  },
+  "definition_sha256": {
+    ".github/workflows/alpha-bridge-ci-verify.yml": "d3dacd19a9c94cd86ca5ba24b075c35f3ff224d155ca5891f3b4325ece933dac",
+    ".github/workflows/download-test.yml": "b1d0a3bfbe2f08bc16c9c8d01a4b5084d0e29319f1f313a20e5176e7dfced943",
+    ".github/workflows/link-check.yml": "08861bf8e4a57fb076d1243912ada79666f7b5840b2b42e7dc67d9031fc665f8"
+  },
+  "generator_sha256": "f238e5d52b0ec5c07f088af203f93698fbdea22a995856dc18c50f5365431353",
+  "schema": "alpha-bridge/fork-ci",
+  "source_branch": "develop",
+  "source_commit": "9c6b1ccfa94c227f15f3b518ee8c5c0475a6e12c",
+  "source_repository": "NeuroTechX/moabb",
+  "version": 1,
+  "workflows": [
+    ".github/workflows/alpha-bridge-ci-verify.yml",
+    ".github/workflows/download-test.yml",
+    ".github/workflows/link-check.yml"
+  ]
+}

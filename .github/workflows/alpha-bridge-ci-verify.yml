@@ -1,45 +1,15 @@
-name: Download-Test
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.number }}-${{ github.event.ref 
-    }}
-  cancel-in-progress: ${{ github.event_name != 'schedule' && (true) }}
-
+name: AlphaBridge CI input verification
 on:
-  schedule:
-  - cron: 42 8 1 * *
-
+  workflow_dispatch:
+    inputs:
+      probe:
+        type: string
+        required: true
 jobs:
-  downloadtest:
-    name: ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: true
-      matrix:
-        os: [ubuntu-latest]
-        python-version: ['3.11']
-    defaults:
-      run:
-        shell: bash
+  check:
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-
-    - name: Install uv
-      uses: astral-sh/setup-uv@v5
-      with:
-        python-version: ${{ matrix.python-version }}
-        enable-cache: true
-    - name: Ensure MNE Data folder exists
-      run: |
-        mkdir -p ~/mne_data
-
-    - name: Install moabb
-      run: |
-        uv pip install -e .[tests]
-
-    - name: Run download tests
-      run: |
-        echo "Running tests"
-        pytest -vv -s --tb=long --durations=0 --maxfail=5 --log-cli-level=INFO --dl-data moabb/tests/test_download.py
+    - run: echo 'Changed inputs reached the consumer'
     needs:
     - alpha_bridge_inputs
     if: ${{ (success()) && needs.alpha_bridge_inputs.outputs.changed == 'true' 
@@ -64,8 +34,8 @@ jobs:
         AB_REPOSITORY: ${{ github.repository }}
         AB_RUN_ID: ${{ github.run_id }}
         AB_HEAD_SHA: ${{ github.sha }}
-        AB_EVENT: ${{ github.event_name }}
-        AB_SCHEDULE: ${{ github.event.schedule || '' }}
+        AB_EVENT: schedule
+        AB_SCHEDULE: alpha-bridge verification
         AB_VARIABLES: ${{ toJSON(vars) }}
         AB_INPUTS: ${{ toJSON(inputs) }}
       shell: bash
