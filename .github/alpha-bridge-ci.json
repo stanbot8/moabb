@@ -9,7 +9,7 @@
     ".github/workflows/download-test.yml": "5ca9b347d5efa46d198ef255dffc0391941d04805759a784058d032b096a377b",
     ".github/workflows/link-check.yml": "46253f8597ad2788cc5c215ba88d27d76fc595a690e27ed0261b03c627bedee4"
   },
-  "generator_sha256": "34bc8c1c1eb9b2799c6a06a6f7bd056799561a0342e1ccd9d7ec69c0f000ae82",
+  "generator_sha256": "9fe7eb2612d4c4d8436e5a627541cad32d0dcba429639855b5a0a2af04b9729a",
   "schema": "alpha-bridge/fork-ci",
   "source_branch": "develop",
   "source_commit": "9c6b1ccfa94c227f15f3b518ee8c5c0475a6e12c",
