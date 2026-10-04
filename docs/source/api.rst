@@ -72,6 +72,9 @@ Motor Imagery Datasets
     Dreyer2023A
     Dreyer2023B
     Dreyer2023C
+    Daly2020
+    Damm2026
+    Peterson2020
     Lee2019_MI
     GrosseWentrup2009
     Ofner2017
@@ -93,11 +96,16 @@ Motor Imagery Datasets
     GuttmannFlury2025_ME
     GuttmannFlury2025_MI
     HefmiIch2025
+    Iwama2023
     Jeong2020
     Kaya2018
     Kumar2024
+    Lee2022
+    Lioi2020_XP1
+    Lioi2020_XP2
     Liu2025
     Ma2020
+    NETBCI2026
     Rozado2015
     Tavakolan2017
     TrianaGuzman2024
@@ -536,6 +544,7 @@ Plotting
     :template: function.rst
 
     plotting.score_plot
+    plotting.plot_critical_difference
     plotting.paired_plot
     plotting.summary_plot
     plotting.meta_analysis_plot
