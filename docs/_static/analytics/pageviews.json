@@ -1,6 +1,6 @@
 {
   "counts": {},
-  "generated_at_utc": "2026-08-05T05:14:39+00:00",
+  "generated_at_utc": "2026-10-05T01:22:42+00:00",
   "property_id": "",
   "reason": "missing GA4_PROPERTY_ID or service account credentials",
   "source": "ga4-data-api",
