@@ -23,6 +23,18 @@ Version 1.8  (Source - GitHub)
 
 Enhancements
 ~~~~~~~~~~~~
+- Ship MOABB's reference benchmark pipeline configs as package data and add :func:`moabb.pipelines.get_benchmark_pipelines`, so published baseline pipelines are available from normal wheel/sdist installs instead of only from a source checkout. Pipeline parsing now also accepts a single ``.py`` config and rejects valid-but-empty config directories instead of silently returning no pipelines (:gh:`1149` by `lindicaphxag-tech`_).
+- Allow :class:`~moabb.evaluations.CrossSubjectEvaluation` to accept an optional top-level ``splitter`` instance, enabling transfer-learning protocols to reuse MOABB's existing caching, parallel execution, and result handling while preserving the default protocol (:gh:`1088` by `lindicaphxag-tech`_).
+- Add Leelakittisin2025 sit-stand transition imagery, PerezBlanco2026 wrist motor-execution, and Vagaja2023 VR motor-imagery datasets (:pr:`1199`) (by `Bruno Aristimunha`_).
+- Add MartinezPeon2025, MILimbEEG dataset loaders with synthetic regression coverage ({gh}`1198` by `Bruno Aristimunha`_).
+- Add Pan2023, Pan2025, PoloHortiguela2025 dataset loaders with synthetic regression coverage ({gh}`1197` by `Bruno Aristimunha`_).
+- Add MIMED2024 and WRCC2023 MI-A/MI-B/MI-C motor-imagery datasets with isolated recording windows (:gh:`1196`, by `Bruno Aristimunha`_).
+- Add :class:`moabb.datasets.MIND2026`, :class:`moabb.datasets.MOVING2024`, :class:`moabb.datasets.NeBULA2025`, and :class:`moabb.datasets.Thapa2025` large-recording motor-imagery and motor-execution datasets. Preserve the MIND acquisition-restart guard and document execution-only tasks (:gh:`1195` by `Bruno Aristimunha`_).
+- Add Batista2022, Farabbi2020, Han2026, Kodera2023 and Kueper2024 dataset loaders (:gh:`1194`).
+- Add Brodu2012, IMUMIA2026, Leeuwis2021, MartinezPeon2024 and PardoGarcia2026 motor-imagery dataset loaders by `Bruno Aristimunha`_ in :gh:`1193`.
+- Add the continuous-recording :class:`datasets.Shin2022` and :class:`datasets.NeuroTUMBCI2025` motor-imagery datasets (:gh:`1192`, by `Bruno Aristimunha`_).
+- Add the offline calibration subsets of Perdikis2018 and Alawieh2025 (:gh:`1191`) (by `Bruno Aristimunha`_).
+- Add Jia2019, MIBMPI2024, Ortiz2023 and Wang2025 motor-imagery loaders (:gh:`1190` by `Bruno Aristimunha`_).
 - Add three OpenNeuro motor-imagery datasets: :class:`moabb.datasets.Peterson2020`, :class:`moabb.datasets.Daly2020`, and :class:`moabb.datasets.Damm2026` (:pr:`1189`, by `Bruno Aristimunha`_).
 - Add :class:`moabb.datasets.NETBCI2026` (NETBCI, Recherche Data Gouv doi:10.57745/RBJRC7): 19 subjects, 74-channel EEG, right-hand motor imagery vs rest over 4 longitudinal sessions x 6 online feedback runs; per-subject EEG is read out of the 49 GB archive by HTTP range requests (:gh:`1188` by `Bruno Aristimunha`_).
 - Add four OpenNeuro motor-imagery datasets: :class:`moabb.datasets.Lee2022` (ds004022, 7 orthopedic-impairment patients, 4 upper-limb MI tasks), :class:`moabb.datasets.Lioi2020_XP1` (ds002336) and :class:`moabb.datasets.Lioi2020_XP2` (ds002338), the two EEG-fMRI right-hand MI / neurofeedback experiments of Lioi et al., and :class:`moabb.datasets.Iwama2023` (ds004444, 30 subjects, 129-channel HD-EEG, up to 16 sessions) (:gh:`1186` by `Bruno Aristimunha`_).
@@ -32,10 +44,18 @@ Enhancements
 
 API changes
 ~~~~~~~~~~~
+- :class:`moabb.evaluations.CrossSubjectEvaluation` now rejects custom splitter outputs with more than three items instead of silently treating all middle items as calibration data; custom splitters must yield ``(train, test)`` or ``(train, cal, test)`` (:gh:`1207` by `lindicaphxag-tech`_).
 - :class:`moabb.evaluations.CrossSessionEvaluation` custom cross-validation
   folds that hold out multiple sessions now emit one result row per held-out
   session instead of one aggregate row per fold. The default leave-one-session-out
   behavior is unchanged (:gh:`1210` by `lindicaphxag-tech`_).
+- Saved evaluation model paths now include the paradigm and optional suffix, so
+  separate benchmark runs no longer overwrite artifacts that otherwise share the
+  same evaluation/dataset/subject/session/pipeline keys (:gh:`1182` by
+  `lindicaphxag-tech`_). Existing legacy ``Models_*``/``GridSearch_*`` trees
+  remain untouched at their historical paths and are not auto-migrated because
+  those paths do not encode the missing paradigm/suffix provenance; legacy
+  artifacts therefore remain manually readable in place.
 
 Requirements
 ~~~~~~~~~~~~
@@ -43,6 +63,30 @@ Requirements
 
 Bugs
 ~~~~
+- Fix :func:`moabb.datasets.Dataset.convert_to_bids` crashing on datasets whose
+  MOABB run-label suffix is literally ``"calibration"`` or ``"crosstalk"``
+  (Wang2025, Leeuwis2021, Brandl2020, Romani_BF2025_ERP). After the ``acq-``
+  switch (:gh:`1217`), those descriptions collided with ``mne-bids``' reserved
+  ``acq-calibration`` / ``acq-crosstalk`` MEG fine-calibration/crosstalk
+  magic strings (which require ``task=None``) and raised
+  ``ValueError: task must be None if the acquisition is "calibration" or
+  "crosstalk"``. ``run_moabb_to_bids`` now rewrites the two reserved tokens
+  to short aliases (``"calib"``/``"xtalk"``) and ``run_bids_to_moabb`` inverts
+  the mapping, keeping the round trip exact for every run label currently
+  emitted on develop and preserving the legacy ``recording-`` read fallback
+  (:gh:`1218` by `Bruno Aristimunha`_).
+- Fix :class:`moabb.datasets.MILimbEEG` convert aborting on subjects S4 and
+  S7 with ``ValueError: Expected a complete four-second stored trial``. A
+  dataset-wide scan of all 3719 motor-imagery CSVs confirms every file has
+  exactly 500 data rows; 124 files (62 per subject across S4 and S7) start
+  with a Mendeley v2 header variant whose first field is literally ``NaN``
+  (``NaN,0,1,...,15``) instead of empty. ``float("NaN")`` succeeds, so the
+  previous first-line sniff mis-flagged them as header-less and pandas kept
+  the extra row. ``_read_trial`` now also treats a first line with a
+  NaN-or-empty leading cell and sequential column-index remainder as a
+  header; a synthetic regression covers both the NaN variant and the empty
+  variant and short trials remain a hard error (no silent zero-pad)
+  (:gh:`1218` by `Bruno Aristimunha`_).
 - Fix :func:`moabb.datasets.Dataset.convert_to_bids` producing files the official
   bids-validator (``@bids/validator`` v2) rejects. ``_build_sidecar_enrichment``
   now wraps string or flat-dict ``acq.filters`` so every top-level value of

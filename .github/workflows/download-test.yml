@@ -26,7 +26,7 @@ jobs:
 
       with:
         ref: ${{ (github.event_name == 'schedule' || github.event_name == 
-          'workflow_run') && 'b7e30e0e021a7ae68590e1e379e10854a52f29cf' || 
+          'workflow_run') && 'd7e0951120b4f8c837fb8def80dfdd49037f58af' || 
           github.sha }}
     - name: Install uv
       uses: astral-sh/setup-uv@v5
@@ -68,9 +68,9 @@ jobs:
         GH_TOKEN: ${{ github.token }}
         AB_REPOSITORY: ${{ github.repository }}
         AB_RUN_ID: ${{ github.run_id }}
-        AB_HEAD_SHA: b7e30e0e021a7ae68590e1e379e10854a52f29cf
+        AB_HEAD_SHA: d7e0951120b4f8c837fb8def80dfdd49037f58af
         AB_WORKFLOW_DIGEST: 
-          3b4f00c08c338176c65ef012d7a578323dd923ca46c4aa049245600a5ab26912
+          efd4f158b88c6320bb1c06b9b8f64accb42092905a9dbb0bd93baefcd8cb68d8
         AB_EVENT: ${{ github.event_name }}
         AB_SCHEDULE: ${{ github.event.schedule || '' }}
         AB_VARIABLES: ${{ toJSON(vars) }}

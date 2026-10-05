@@ -26,7 +26,7 @@ jobs:
 
       with:
         ref: ${{ (github.event_name == 'schedule' || github.event_name == 
-          'workflow_run') && 'b7e30e0e021a7ae68590e1e379e10854a52f29cf' || 
+          'workflow_run') && 'd7e0951120b4f8c837fb8def80dfdd49037f58af' || 
           github.sha }}
     - name: Check links in Markdown and RST files
       uses: lycheeverse/lychee-action@v2
@@ -101,9 +101,9 @@ jobs:
         GH_TOKEN: ${{ github.token }}
         AB_REPOSITORY: ${{ github.repository }}
         AB_RUN_ID: ${{ github.run_id }}
-        AB_HEAD_SHA: b7e30e0e021a7ae68590e1e379e10854a52f29cf
+        AB_HEAD_SHA: d7e0951120b4f8c837fb8def80dfdd49037f58af
         AB_WORKFLOW_DIGEST: 
-          29c6dc0d0e35a991940c19e2c8d7179f05f2512a7d02a94c5e4ec99e9bbebfe9
+          50e08142f6d924d193a4adff1b1b99ceb6be679daa93664ed52e99470cc89675
         AB_EVENT: ${{ github.event_name }}
         AB_SCHEDULE: ${{ github.event.schedule || '' }}
         AB_VARIABLES: ${{ toJSON(vars) }}

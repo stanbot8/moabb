@@ -1,18 +1,18 @@
 {
   "definition_blob_sha1": {
     ".github/workflows/alpha-bridge-ci-verify.yml": "21051178fb840f31162cde1a64943007a2178f3f",
-    ".github/workflows/download-test.yml": "ef2617c44de9e56db4a86431adcaa91e443baaee",
-    ".github/workflows/link-check.yml": "9b77525393d3439216428045784f8ebf4b7835f7"
+    ".github/workflows/download-test.yml": "762c392024c7cb83d6dae545a3d4f3746d1c8ea1",
+    ".github/workflows/link-check.yml": "d0f5bfaea83f7f71babc9bd1846be09ca5248688"
   },
   "definition_sha256": {
     ".github/workflows/alpha-bridge-ci-verify.yml": "f1d0d506e1faf2ef9e00102fbf464fa1a74203bf3463e623621402b9de9e8a45",
-    ".github/workflows/download-test.yml": "70ec6e48110f9da78d3d08470ed409f5b995190e36a1b64a4e3c9b7781abe7f2",
-    ".github/workflows/link-check.yml": "1593cbfd891b8693e6d38829eb2ef414049442680227c4b7867133ce3972624c"
+    ".github/workflows/download-test.yml": "68fcfb77e735ab5a1ecb9838df2db6935184a8ed22c7d9da180ba49867adf398",
+    ".github/workflows/link-check.yml": "ac6c1b314a4752abfaba01d1db30ec1ba4d00c4699f480fdfe4693fc80b7483e"
   },
   "generator_sha256": "9fe7eb2612d4c4d8436e5a627541cad32d0dcba429639855b5a0a2af04b9729a",
   "schema": "alpha-bridge/fork-ci",
   "source_branch": "develop",
-  "source_commit": "b7e30e0e021a7ae68590e1e379e10854a52f29cf",
+  "source_commit": "d7e0951120b4f8c837fb8def80dfdd49037f58af",
   "source_repository": "NeuroTechX/moabb",
   "version": 1,
   "workflows": [
