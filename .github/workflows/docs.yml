@@ -328,9 +328,10 @@ jobs:
       actions: read
       contents: read
     concurrency:
-      group: alpha-bridge-inputs-${{ github.workflow }}-${{ github.sha }}-${{ 
-        github.event.schedule || github.event_name }}
+      group: alpha-bridge-inputs-e03e730dcfb5692e-${{ github.workflow }}-${{ 
+        github.sha }}-${{ github.event.schedule || github.event_name }}
       cancel-in-progress: false
+      queue: max
     outputs:
       changed: ${{ steps.identity.outputs.changed }}
     steps:
@@ -346,7 +347,7 @@ jobs:
           AB_REF: ${{ (github.event_name == 'schedule' || github.event_name == 
             'workflow_run') && 'refs/heads/develop' || github.ref }}
           AB_WORKFLOW_DIGEST: 
-            35c3384d398cd81df698d428a2366297df62bcd2c99eaa3b4eabf500bac0b6a3
+            9fc2bb9d3535c0df2915b3ad4ca14d3ca79042b331ee32449ef84209b47417bc
           AB_EVENT: ${{ github.event_name }}
           AB_SCHEDULE: ${{ github.event.schedule || '' }}
           AB_VARIABLES: ${{ toJSON(vars) }}
