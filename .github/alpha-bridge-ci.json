@@ -1,26 +1,26 @@
 {
   "default_workflow_permissions": "read",
   "definition_blob_sha1": {
-    ".github/workflows/alpha-bridge-ci-probe.yml": "54863818654b6c3b324f47f927554ca656b0ba72",
+    ".github/workflows/alpha-bridge-ci-probe.yml": "f77ab4ad7b56a3571281506f6969a1e9889e556a",
     ".github/workflows/alpha-bridge-ci-verify.yml": "95760790304a2bad6d6820ee35e70aafba80f356",
-    ".github/workflows/docs.yml": "c99eee19364e37063ea4dd215c088400fc208019",
-    ".github/workflows/download-test.yml": "685becb106a9e1105a9fabe90d983e82aa80b828",
-    ".github/workflows/link-check.yml": "dc79018d23d0f69d62091be7327110fca5e61a56",
-    ".github/workflows/test-braindecode.yml": "5113633125356260fe6f7ed7030134cdaca89f9f",
-    ".github/workflows/test.yml": "925c990abb3745d2edacb322e9b3bce74d7f0063",
-    ".github/workflows/whats-new.yml": "3e298a64ff4ec21098003753a014e7875abdc3f9"
+    ".github/workflows/docs.yml": "d0cca1eb2854486f1d12adb2da8ecbb1324ffa79",
+    ".github/workflows/download-test.yml": "636bea720fe1f5c00c234c24677580ea4786eb3a",
+    ".github/workflows/link-check.yml": "c333ffc111a3e7a851ca014a898555a4757e26a4",
+    ".github/workflows/test-braindecode.yml": "bf584fefd2e88ee45166eb93804cb59d71edac21",
+    ".github/workflows/test.yml": "eb3fcc8028888c88b854303bb8a3379ac9f18e6c",
+    ".github/workflows/whats-new.yml": "904125068eaa62fd26f12ddc26bb6a8e0d105dce"
   },
   "definition_sha256": {
-    ".github/workflows/alpha-bridge-ci-probe.yml": "0637dc006384f188f10c612b30c708f59c9d535a41c4852e3d40cf692635e8a9",
+    ".github/workflows/alpha-bridge-ci-probe.yml": "90f1497e0c8964df7ce687e21d00ea5f4472246fbbdbf3aa21826960efbb18c2",
     ".github/workflows/alpha-bridge-ci-verify.yml": "4b1ca9d589df4e671637798677985a2baf15c4607d71689df399a109b491e0a2",
-    ".github/workflows/docs.yml": "174b7b674a5188f2038d21ef6bafe187e9b8c8d329316cb500dac8c3be5ad322",
-    ".github/workflows/download-test.yml": "a55cc3c674fc0e0783b8b10148bb3ba57aaa32b19ff13cfd82e1d5cabd55cf75",
-    ".github/workflows/link-check.yml": "96f2ac7bb655649780cd0c912cfaeb794b152fbbabae1933597ee53e189c8090",
-    ".github/workflows/test-braindecode.yml": "f7f00b03fa2d36dd0c433331b9dd3df1e5cd8088cdece792c00faebf80cd6565",
-    ".github/workflows/test.yml": "c9d116ab9894c865f7d5791098b3ae248ac34c5628351aaebf5f0cf3484258a5",
-    ".github/workflows/whats-new.yml": "a69aba41c0de0c554d8a11ade8ae7d03c3007479271c47743ede24320ccfea8b"
+    ".github/workflows/docs.yml": "57ca6f7f22715387f02cc2ec3bd6e3773c43163d1818ccae9fc231aa4c29087d",
+    ".github/workflows/download-test.yml": "e2465d019c83d8dfbae6a4234c0afb84befd4f9d74013a79f8ea6f94f321fd23",
+    ".github/workflows/link-check.yml": "66c9731b9f03ec7120e21edfc3fd13a04fd10cf72b1d23646d2d5da85a39bd36",
+    ".github/workflows/test-braindecode.yml": "7319997adc4b0484091ac973bb668a76de68efec6e89b10a34c8ee8d5e2b6b82",
+    ".github/workflows/test.yml": "9c0cb447835833eea6c9dd9113563665cba7fab0895f26677a1396758cefd0a8",
+    ".github/workflows/whats-new.yml": "9ce105cced4d7bc7714a97e47c7a633421ee8baef7c588a673c599a8df6edbd6"
   },
-  "generator_sha256": "5a9faa0e5f7f50db58c87e3b337aa37b202117d9b2f8a1cf999b892b9c2dce77",
+  "generator_sha256": "4bbd1a1f9315d134cec261dd0580b504db191355193dfc428c3ca0ac65bb6b74",
   "schema": "alpha-bridge/fork-ci",
   "source_branch": "develop",
   "source_commit": "5a860a6009746f84d617fbf604626ce564e59a9d",
